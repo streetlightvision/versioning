@@ -8,6 +8,10 @@ RUN apt-get update && \
 # Creating a Subversion repository
 RUN svnadmin create /opt/svnrepo
 
+# Adding the Subversion auth files
+RUN rm -rf /opt/svnrepo/conf
+COPY conf/* /opt/svnrepo/conf/
+
 # Standard SVN port
 EXPOSE 3690
 
