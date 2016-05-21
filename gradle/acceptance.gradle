@@ -57,9 +57,28 @@
  * @enduml
  */
 
-task acceptanceTest {
+class AcceptanceTest extends DefaultTask {
+
+    @Input
+    String version
+
+}
+
+task acceptanceTestV7(type: AcceptanceTest) {
+    version = '7'
     dependsOn 'jar'
 }
 
+task acceptanceTestV8(type: AcceptanceTest) {
+    version = '8'
+    mustRunAfter acceptanceTestV7
+    dependsOn 'jar'
+}
+
+task acceptanceTest {
+    dependsOn acceptanceTestV7
+    dependsOn acceptanceTestV8
+    mustRunAfter test
+}
+
 build.dependsOn acceptanceTest
-test.mustRunAfter acceptanceTest
