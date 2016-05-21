@@ -1,0 +1,65 @@
+/**
+ * Acceptance tests
+ *
+ * @startuml
+ * control Build
+ * participant acceptanceTestV7
+ * participant prepareEnvV7
+ * participant destroyEnvV7
+ * entity V7Client
+ * entity V7Server
+ *
+ * Build -> acceptanceTestV7: Run
+ *
+ * == Setup ==
+ *
+ * acceptanceTestV7 -> prepareEnvV7: depends on
+ *
+ * group Server setup
+ *    prepareEnvV7 -> V7Server: Start container
+ *    note right
+ *       * Initialisation of the repository
+ *       * Creating files and commits
+ *       * Launching svn
+ *    end note
+ *    activate V7Server
+ * end
+ *
+ * group Client setup
+ *
+ *    prepareEnvV7 -> V7Client: Start container
+ *    note right
+ *       * Uploading the versioning.jar in a local .m2 repository
+ *    end note
+ *    activate V7Client
+ *
+ * end
+ *
+ * V7Client -> V7Server: Link
+ *
+ * == Tests ==
+ *
+ * acceptanceTestV7 -> V7Client: Checkout code
+ * V7Client -> V7Server: Checkout code
+ * V7Server --> V7Client: code
+ * acceptanceTestV7 -> V7Client: ./gradlew versionDisplay
+ * V7Client --> acceptanceTestV7: output
+ * acceptanceTestV7 -> acceptanceTestV7: Checks the output
+ *
+ * == Tear down ==
+ *
+ * acceptanceTestV7 -> destroyEnvV7: finalized by
+ * destroyEnvV7 -> V7Client: Stop
+ * destroy V7Client
+ * destroyEnvV7 -> V7Server: Stop
+ * destroy V7Server
+ *
+ * @enduml
+ */
+
+task acceptanceTest {
+    dependsOn 'jar'
+}
+
+build.dependsOn acceptanceTest
+test.mustRunAfter acceptanceTest
