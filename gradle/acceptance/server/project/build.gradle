@@ -1,0 +1,12 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'net.nemerosa:versioning:2.0'
+    }
+}
+
+apply plugin: 'net.nemerosa.versioning'
+
+version = versioning.info.display

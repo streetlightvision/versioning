@@ -12,6 +12,9 @@ RUN svnadmin create /opt/svnrepo
 RUN rm -rf /opt/svnrepo/conf
 COPY conf/* /opt/svnrepo/conf/
 
+# Copying the file to commit
+ADD project /opt/project/
+
 # Standard SVN port
 EXPOSE 3690
 
